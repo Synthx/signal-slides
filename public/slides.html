@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Signals | Jetdev</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/scripts/reveal.js/reveal.css">
+    <link rel="stylesheet" href="/scripts/reveal.js/theme/night.css" id="theme">
+    <link rel="stylesheet" href="/scripts/reveal.js/plugin/highlight/monokai.css">
+    <style>
+        :root {
+            --primary: #FF772C;
+            --contrast: #ffffff;
+
+            --r-background-color: #222628;
+            --r-main-color: var(--contrast);
+            --r-heading-color: var(--primary);
+            --r-heading-font: 'Gosha', sans-serif;
+            --r-link-color: var(--primary);
+        }
+
+        @font-face {
+            font-family: "Gosha";
+            src: url(/fonts/gosha.ttf) format("TrueType");
+            font-style: normal;
+            font-weight: 700;
+            font-display: auto;
+        }
+
+        .highlighted {
+            color: var(--primary);
+            font-family: "Gosha", sans-serif;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h2>Signals ⚡️</h2>
+        </section>
+        <section>
+            <section>
+                <h3>How to do reactivity in Javascript ?</h3>
+                <p class="fragment fade-up">But first, what's reactivity ?</p>
+            </section>
+            <section data-auto-animate data-background-image="/images/backgrounds/excel.jpeg">
+                <h2>Excel</h2>
+            </section>
+            <section data-auto-animate>
+                <h2>Excel</h2>
+                <table data-id="excel-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th width="300">A</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>1</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>2</td>
+                        <td>= A0 + A1</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section data-auto-animate>
+                <h2>Excel</h2>
+                <table data-id="excel-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th width="300">A</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>6</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section data-auto-animate>
+                <h2>Excel</h2>
+                <table data-id="excel-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th width="300">A</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>10</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+        <section>
+            <section data-auto-animate>
+                <h3>Javascript is not magic</h3>
+            </section>
+            <section data-auto-animate>
+                <h3>Javascript is not magic</h3>
+                <pre data-id="js-code">
+                    <code class="javascript" data-trim data-noescape data-line-numbers="1-3|5|7|9">
+                        let A0 = 1;
+                        let A1 = 2;
+                        let A2 = A0 + A1;
+
+                        console.log(A2); // output: 3
+
+                        A0 = 2;
+
+                        console.log(A2); // still output: 3
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h3>Javascript is not magic</h3>
+                <pre data-id="js-code">
+                    <code class="javascript" data-trim data-noescape data-line-numbers="4-7|9|11,12|14-16">
+                        let A0 = 1;
+                        let A1 = 2;
+
+                        let A2;
+                        function update() {
+                            A2 = A0 + A1;
+                        }
+
+                        console.log(A2); // output: undefined
+
+                        update();
+                        console.log(A2); // output: 3
+
+                        A0 = 2;
+                        update();
+                        console.log(A2); // output: 4
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h3>Javascript is not magic</h3>
+                <pre data-id="js-code">
+                    <code class="javascript" data-trim data-noescape data-line-numbers="8">
+                        let A0 = 1;
+                        let A1 = 2;
+
+                        let A2;
+                        function update() {
+                            A2 = A0 + A1;
+
+                            triggerFunction(); // do something
+                        }
+
+                        console.log(A2); // undefined
+
+                        update();
+                        console.log(A2); // 3
+
+                        A0 = 2;
+                        update();
+                        console.log(A2); // 4
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h3>Javascript is not magic</h3>
+                <img alt="Reactivity" class="r-stretch" style="border-radius: 20px"
+                     data-src="assets/images/reactivity.png"/>
+            </section>
+        </section>
+        <section>
+            <h3>Problem with JS frameworks</h3>
+            <div class="r-stack">
+                <img alt="Angular" class="fade-out" data-src="/images/angular.png" height="200">
+                <img alt="React" class="fragment fade-out" data-src="/images/react.png"
+                     height="200">
+                <img alt="VueJS" class="fragment fade-out" data-src="/images/vue.png"
+                     height="200">
+                <img alt="Svelte" class="fragment fade-out" data-src="/images/svelte.png"
+                     height="200">
+                <img alt="SolidJS" class="fragment" data-src="/images/solidjs.png" height="200">
+            </div>
+        </section>
+        <section>
+            <section data-auto-animate>
+                <h2>Signals ⚡️</h2>
+            </section>
+            <section data-auto-animate>
+                <h2>Signals ⚡️</h2>
+                <p>
+                    The goal is to provide infrastructure for <span
+                        class="highlighted">managing</span> such <span class="highlighted">application</span>
+                    state so developers can focus on business logic rather than these repetitive details.
+                </p>
+            </section>
+            <section data-auto-animate>
+                <h2>Benefits</h2>
+            </section>
+            <section data-auto-animate>
+                <h2>Benefits</h2>
+                <ul>
+                    <li>Automatic Dependency Tracking ♻️</li>
+                </ul>
+            </section>
+            <section data-auto-animate>
+                <h2>Benefits</h2>
+                <ul>
+                    <li>Automatic Dependency Tracking ♻️</li>
+                    <li>Lazy Evaluation ⚡️</li>
+                </ul>
+            </section>
+            <section data-auto-animate>
+                <h2>Benefits</h2>
+                <ul>
+                    <li>Automatic Dependency Tracking ♻️</li>
+                    <li>Lazy Evaluation ⚡️</li>
+                    <li>Memoization 📦️</li>
+                </ul>
+            </section>
+        </section>
+        <section
+                data-background-image="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXdqaGYwd2I4ajJvdWJ5dTUzMHA0c2x1aTU0ZWpmaTZrZGs4cjRoNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/QbumCX9HFFDQA/giphy.webp">
+            <h2>Let's do some code</h2>
+        </section>
+        <section>
+            <section data-auto-animate>
+                <h2>Back to basics</h2>
+                <pre data-id="basic-signal-code">
+                    <code class="javascript" data-trim data-noescape data-line-numbers="1|3">
+                        const [count] = createSignal(0);
+
+                        console.log(count()); // output: 0
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h2>Back to basics</h2>
+                <pre data-id="basic-signal-code">
+                    <code class="javascript" data-trim data-noescape data-line-numbers="1|5|7">
+                        const [count, setCount] = createSignal(0);
+
+                        console.log(count()); // output: 0
+
+                        setCount(99);
+
+                        console.log(count()); // output: 99
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h2>Back to basics</h2>
+                <pre data-id="basic-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="7">
+                        const [count, setCount] = createSignal(0);
+
+                        console.log(count()); // output: 0
+
+                        return (
+                            /* Updates when `count` changes */
+                            <span>{count()}</span>
+                        );
+                    </code>
+                </pre>
+            </section>
+            <section data-background-iframe="http://localhost:3000" data-background-interactive>
+                <div style="position: absolute; right: 20px; padding: 20px; border-radius: 20px; background-color: #222628; color: #ffffff">
+                    <p>Live demo</p>
+                </div>
+            </section>
+        </section>
+        <section>
+            <section data-auto-animate>
+                <h2>Adding reactivity</h2>
+                <pre data-id="reactivity-signal-code">
+                    <code class="javascript" data-trim data-line-numbers>
+                        const [count, setCount] = createSignal(0);
+
+                        return (
+                            /* Updates when `count` changes */
+                            <span>{count()}</span>
+                        );
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h2>Adding reactivity</h2>
+                <pre data-id="reactivity-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="3-5">
+                        const [count, setCount] = createSignal(0);
+
+                        const increment = () => {
+                            setCount((prev) => prev + 1);
+                        };
+
+                        return (
+                            /* Updates when `count` changes */
+                            <span>{count()}</span>
+                        );
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h2>Adding reactivity</h2>
+                <pre data-id="reactivity-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="11-13">
+                        const [count, setCount] = createSignal(0);
+
+                        const increment = () => {
+                            setCount((prev) => prev + 1);
+                        };
+
+                        return (
+                            <div>
+                                /* Updates when `count` changes */
+                                <span>{count()}</span>
+                                <button type="button" onClick={increment}>
+                                    Increment
+                                </button>
+                            </div>
+                        );
+                    </code>
+                </pre>
+            </section>
+            <section data-background-iframe="http://localhost:3000/counter" data-background-interactive>
+                <div style="position: absolute; right: 20px; padding: 20px; border-radius: 20px; background-color: #222628; color: #ffffff">
+                    <p>Live demo</p>
+                </div>
+            </section>
+        </section>
+        <section>
+            <section data-auto-animate>
+                <h3>React to changes: Effect</h3>
+            </section>
+            <section data-auto-animate>
+                <h3>React to changes: Effect</h3>
+                <p>Effects are <span class="highlighted">callback</span> functions that are triggered when the
+                    signals they depend on <span class="highlighted">change</span>.<br><br>Used for DOM
+                    manipulations, data fetching, and subscriptions.</p>
+            </section>
+            <section data-auto-animate>
+                <h3>React to changes: Effect</h3>
+                <pre data-id="reactivity-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="|3-6">
+                        const [count, setCount] = createSignal(0);
+
+                        createEffect(() => {
+                            // will run every time count changes
+                            console.log(count());
+                        });
+
+                        const increment = () => {
+                            setCount((prev) => prev + 1);
+                        };
+                    </code>
+                </pre>
+            </section>
+            <section data-background-iframe="http://localhost:3000/effect" data-background-interactive>
+                <div style="position: absolute; right: 20px; padding: 20px; border-radius: 20px; background-color: #222628; color: #ffffff">
+                    <p>Live demo</p>
+                </div>
+            </section>
+        </section>
+        <section>
+            <section data-auto-animate>
+                <h3>Compose signals</h3>
+            </section>
+            <section data-auto-animate>
+                <h3>Compose signals</h3>
+                <p>Composed / Derived / Memo signals are <span class="highlighted">pure</span> functions that
+                    rely on <span class="highlighted">one or more signals</span> to produce a <span class="highlighted">derived</span>
+                    value.</p>
+            </section>
+            <section data-auto-animate>
+                <h3>Compose signals</h3>
+                <pre data-id="composed-signal-code">
+                    <code class="javascript" data-trim data-line-numbers>
+                        const [count, setCount] = createSignal(0);
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h3>Compose signals</h3>
+                <pre data-id="composed-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="3|5|7|9">
+                        const [count, setCount] = createSignal(0);
+
+                        const doubledCount = createMemo(() => count() * 2);
+
+                        console.log(doubledCount()); // output: 0
+
+                        setCount(3);
+
+                        console.log(doubledCount()); // output: 6
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h3>Compose signals</h3>
+                <img class="r-stretch" alt="Composed signals" style="border-radius: 20px;"
+                     data-src="/images/composed.jpeg">
+            </section>
+            <section data-background-iframe="http://localhost:3000/composed" data-background-interactive>
+                <div style="position: absolute; right: 20px; padding: 20px; border-radius: 20px; background-color: #222628; color: #ffffff">
+                    <p>Live demo</p>
+                </div>
+            </section>
+        </section>
+        <section>
+            <section data-auto-animate>
+                <h3>Composed vs Effect</h3>
+                <table class="r-stretch" data-id="composed-vs-effect-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Composed</th>
+                        <th>Effect</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Return value</td>
+                        <td>Yes ✅</td>
+                        <td>No ❌</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Cache result</td>
+                        <td>Yes ✅</td>
+                        <td>No ❌</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Dependency tracking</td>
+                        <td>Yes ✅</td>
+                        <td>Yes ✅</td>
+                    </tr>
+                    <tr class="fragment">
+                        <td>Example use case</td>
+                        <td>Transforming data</td>
+                        <td>UI updates, network requests</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section data-auto-animate>
+                <h3>Composed vs Effect</h3>
+                <p>Bad practice</p>
+                <pre data-id="composed-vs-effect-signal-code">
+                    <code class="javascript" data-trim data-line-numbers>
+                        const [count, setCount] = createSignal(0);
+
+                        const doubledCount = createMemo(() => {
+                            if (count() > 10) {
+                                console.log("count to high");
+                            }
+
+                            return count() * 2;
+                        });
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h3>Composed vs Effect</h3>
+                <p>Bad practice</p>
+                <pre data-id="composed-vs-effect-signal-code">
+                    <code class="javascript" data-trim data-line-numbers>
+                        const [count, setCount] = createSignal(0);
+                        const doubledCount = createMemo(() => count() * 2);
+
+                        createEffect(() => {
+                            if (count() > 10) {
+                                console.log("count to high");
+                            }
+                        });
+                    </code>
+                </pre>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Official integration</h2>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 20px">
+                    <img alt="SolidJS" class="fragment" data-src="/images/solidjs.png" height="200">
+                    <img alt="Angular" class="fragment" data-src="/images/angular.png" height="200">
+                    <img alt="Qwik" class="fragment" data-src="/images/qwik.png" height="200">
+                </div>
+            </section>
+            <section data-auto-animate>
+                <h2>Angular integration</h2>
+                <pre data-id="angular-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="|3">
+                        @Component(...)
+                        class MyComponent {
+                            count = signal(0);
+                        }
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h2>Angular integration</h2>
+                <pre data-id="angular-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="5-7">
+                        @Component(...)
+                        class MyComponent {
+                            count = signal(0);
+
+                            increment() {
+                                this.count.update((prev) => prev + 1);
+                            }
+                        }
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h2>Angular integration</h2>
+                <pre data-id="angular-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="5-7">
+                        @Component(...)
+                        class MyComponent {
+                            count = signal(0);
+
+                            constructor() {
+                                effect(() => console.log(count()));
+                            }
+
+                            increment() {
+                                this.count.update((prev) => prev + 1);
+                            }
+                        }
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h2>Angular integration</h2>
+                <pre data-id="angular-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="4">
+                        @Component(...)
+                        class MyComponent {
+                            count = signal(0);
+                            doubledCount = computed(() => this.count() * 2);
+
+                            constructor() {
+                                effect(() => console.log(count()));
+                            }
+
+                            increment() {
+                                this.count.update((prev) => prev + 1);
+                            }
+                        }
+                    </code>
+                </pre>
+            </section>
+        </section>
+        <section>
+            <h2>Thank you</h2>
+        </section>
+    </div>
+</div>
+<script src="/scripts/reveal.js/reveal.js"></script>
+<script src="/scripts/reveal.js/plugin/highlight/highlight.js"></script>
+<script>
+    Reveal.initialize({
+        hash: true,
+        plugins: [RevealHighlight],
+    });
+</script>
+</body>
+</html>

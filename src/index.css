@@ -1,0 +1,60 @@
+@font-face {
+    font-family: "Gosha";
+    src: url(/fonts/gosha.ttf) format("TrueType");
+    font-style: normal;
+    font-weight: 700;
+    font-display: auto;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #222628;
+    color: #ffffff;
+    font-family: "Gosha", sans-serif;
+    padding: 100px;
+}
+
+body div {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+body div span {
+    border-radius: 10px;
+    border: 1px solid #ffffff;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 70px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+body div button {
+    background-color: transparent;
+    cursor: pointer;
+    color: #ffffff;
+    outline: none;
+    border: 1px solid #FF772C;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 50px;
+    line-height: 1;
+    font-weight: 500;
+    padding: 20px 40px;
+}
+
+body div button:hover {
+    background-color: #FF772C;
+}

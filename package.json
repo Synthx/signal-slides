@@ -1,0 +1,24 @@
+{
+	"name": "signal-slides",
+	"version": "0.0.0",
+	"description": "",
+	"scripts": {
+		"start": "vite",
+		"dev": "vite",
+		"build": "vite build",
+		"serve": "vite preview"
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.2",
+		"@types/reveal.js": "^5.0.3",
+		"typescript": "^5.3.3",
+		"vite": "^5.4.7",
+		"vite-plugin-solid": "^2.8.2"
+	},
+	"dependencies": {
+		"@solidjs/router": "^0.14.5",
+		"reveal.js": "^5.1.0",
+		"solid-js": "^1.8.11"
+	}
+}
