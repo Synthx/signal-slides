@@ -32,9 +32,27 @@
             font-family: "Gosha", sans-serif;
             font-weight: 700;
         }
+
+        .live-demo-panel {
+            margin: 0 auto;
+            pointer-events: auto;
+            border-radius: 20px;
+            background-color: #ffffff;
+            color: #222628;
+            padding: 20px 40px;
+            width: fit-content;
+        }
+
+        .jetdev-logo {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
+<img src="/images/logo.svg" alt="Jetdev" width="250" class="jetdev-logo">
 <div class="reveal">
     <div class="slides">
         <section>
@@ -192,21 +210,21 @@
                     </code>
                 </pre>
             </section>
-            <section data-auto-animate>
-                <h3>Javascript is not magic</h3>
+            <section>
+                <h3>Reactivity in Javascript</h3>
                 <img alt="Reactivity" class="r-stretch" style="border-radius: 20px"
-                     data-src="assets/images/reactivity.png"/>
+                     data-src="/images/reactivity.png"/>
             </section>
         </section>
         <section>
             <h3>Problem with JS frameworks</h3>
-            <div class="r-stack">
-                <img alt="Angular" class="fade-out" data-src="/images/angular.png" height="200">
-                <img alt="React" class="fragment fade-out" data-src="/images/react.png"
+            <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 20px; padding: 0 50px;">
+                <img alt="Angular" class="fragment" data-src="/images/angular.png" height="200">
+                <img alt="React" class="fragment" data-src="/images/react.png"
                      height="200">
-                <img alt="VueJS" class="fragment fade-out" data-src="/images/vue.png"
+                <img alt="VueJS" class="fragment" data-src="/images/vue.png"
                      height="200">
-                <img alt="Svelte" class="fragment fade-out" data-src="/images/svelte.png"
+                <img alt="Svelte" class="fragment" data-src="/images/svelte.png"
                      height="200">
                 <img alt="SolidJS" class="fragment" data-src="/images/solidjs.png" height="200">
             </div>
@@ -218,7 +236,7 @@
             <section data-auto-animate>
                 <h2>Signals ⚡️</h2>
                 <p>
-                    The goal is to provide infrastructure for <span
+                    Provide infrastructure for <span
                         class="highlighted">managing</span> such <span class="highlighted">application</span>
                     state so developers can focus on business logic rather than these repetitive details.
                 </p>
@@ -292,9 +310,9 @@
                     </code>
                 </pre>
             </section>
-            <section data-background-iframe="http://localhost:3000" data-background-interactive>
-                <div style="position: absolute; right: 20px; padding: 20px; border-radius: 20px; background-color: #222628; color: #ffffff">
-                    <p>Live demo</p>
+            <section data-background-iframe="/" data-background-interactive>
+                <div class="live-demo-panel">
+                    <h2>Live demo</h2>
                 </div>
             </section>
         </section>
@@ -351,9 +369,9 @@
                     </code>
                 </pre>
             </section>
-            <section data-background-iframe="http://localhost:3000/counter" data-background-interactive>
-                <div style="position: absolute; right: 20px; padding: 20px; border-radius: 20px; background-color: #222628; color: #ffffff">
-                    <p>Live demo</p>
+            <section data-background-iframe="/counter" data-background-interactive>
+                <div class="live-demo-panel">
+                    <h2>Live demo</h2>
                 </div>
             </section>
         </section>
@@ -363,14 +381,26 @@
             </section>
             <section data-auto-animate>
                 <h3>React to changes: Effect</h3>
-                <p>Effects are <span class="highlighted">callback</span> functions that are triggered when the
+                <p><span class="highlighted">Callback</span> functions that are triggered when the
                     signals they depend on <span class="highlighted">change</span>.<br><br>Used for DOM
                     manipulations, data fetching, and subscriptions.</p>
             </section>
             <section data-auto-animate>
                 <h3>React to changes: Effect</h3>
                 <pre data-id="reactivity-signal-code">
-                    <code class="javascript" data-trim data-line-numbers="|3-6">
+                    <code class="javascript" data-trim data-line-numbers>
+                        const [count, setCount] = createSignal(0);
+
+                        const increment = () => {
+                            setCount((prev) => prev + 1);
+                        };
+                    </code>
+                </pre>
+            </section>
+            <section data-auto-animate>
+                <h3>React to changes: Effect</h3>
+                <pre data-id="reactivity-signal-code">
+                    <code class="javascript" data-trim data-line-numbers="3-6">
                         const [count, setCount] = createSignal(0);
 
                         createEffect(() => {
@@ -384,9 +414,9 @@
                     </code>
                 </pre>
             </section>
-            <section data-background-iframe="http://localhost:3000/effect" data-background-interactive>
-                <div style="position: absolute; right: 20px; padding: 20px; border-radius: 20px; background-color: #222628; color: #ffffff">
-                    <p>Live demo</p>
+            <section data-background-iframe="/effect" data-background-interactive>
+                <div class="live-demo-panel">
+                    <h2>Live demo</h2>
                 </div>
             </section>
         </section>
@@ -396,7 +426,8 @@
             </section>
             <section data-auto-animate>
                 <h3>Compose signals</h3>
-                <p>Composed / Derived / Memo signals are <span class="highlighted">pure</span> functions that
+                <p>(Composed / Derived / Memo)</p>
+                <p><span class="highlighted">Pure</span> function that
                     rely on <span class="highlighted">one or more signals</span> to produce a <span class="highlighted">derived</span>
                     value.</p>
             </section>
@@ -429,9 +460,9 @@
                 <img class="r-stretch" alt="Composed signals" style="border-radius: 20px;"
                      data-src="/images/composed.jpeg">
             </section>
-            <section data-background-iframe="http://localhost:3000/composed" data-background-interactive>
-                <div style="position: absolute; right: 20px; padding: 20px; border-radius: 20px; background-color: #222628; color: #ffffff">
-                    <p>Live demo</p>
+            <section data-background-iframe="/composed" data-background-interactive>
+                <div class="live-demo-panel">
+                    <h2>Live demo</h2>
                 </div>
             </section>
         </section>
@@ -447,7 +478,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
+                    <tr class="fragment">
                         <td>Return value</td>
                         <td>Yes ✅</td>
                         <td>No ❌</td>
@@ -516,7 +547,7 @@
             <section data-auto-animate>
                 <h2>Angular integration</h2>
                 <pre data-id="angular-signal-code">
-                    <code class="javascript" data-trim data-line-numbers="|3">
+                    <code class="javascript" data-trim data-line-numbers="3">
                         @Component(...)
                         class MyComponent {
                             count = signal(0);
@@ -527,13 +558,17 @@
             <section data-auto-animate>
                 <h2>Angular integration</h2>
                 <pre data-id="angular-signal-code">
-                    <code class="javascript" data-trim data-line-numbers="5-7">
+                    <code class="javascript" data-trim data-line-numbers="6,10">
                         @Component(...)
                         class MyComponent {
                             count = signal(0);
 
                             increment() {
                                 this.count.update((prev) => prev + 1);
+                            }
+
+                            reset() {
+                                this.count.set(0);
                             }
                         }
                     </code>
@@ -542,7 +577,7 @@
             <section data-auto-animate>
                 <h2>Angular integration</h2>
                 <pre data-id="angular-signal-code">
-                    <code class="javascript" data-trim data-line-numbers="5-7">
+                    <code class="javascript" data-trim data-line-numbers="6">
                         @Component(...)
                         class MyComponent {
                             count = signal(0);
@@ -553,6 +588,10 @@
 
                             increment() {
                                 this.count.update((prev) => prev + 1);
+                            }
+
+                            reset() {
+                                this.count.set(0);
                             }
                         }
                     </code>
@@ -574,13 +613,17 @@
                             increment() {
                                 this.count.update((prev) => prev + 1);
                             }
+
+                            reset() {
+                                this.count.set(0);
+                            }
                         }
                     </code>
                 </pre>
             </section>
         </section>
         <section>
-            <h2>Thank you</h2>
+            <h2>Thank you 🙏</h2>
         </section>
     </div>
 </div>
@@ -588,6 +631,8 @@
 <script src="/scripts/reveal.js/plugin/highlight/highlight.js"></script>
 <script>
     Reveal.initialize({
+        controls: false,
+        progress: false,
         hash: true,
         plugins: [RevealHighlight],
     });
